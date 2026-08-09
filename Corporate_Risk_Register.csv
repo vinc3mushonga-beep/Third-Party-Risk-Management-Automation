@@ -1,0 +1,6 @@
+Risk_ID,Threat_Vector,Inherent_Likelihood,Inherent_Impact,Inherent_Risk_Score,Regulatory_Mapping,Mitigation_Control,Residual_Likelihood,Residual_Impact,Residual_Risk_Score,Owner
+R-01,Third-Party Cloud PaaS Data Sovereign Leakage,4,5,20,GDPR Art. 28 / DORA Art. 30,Enforced localized tenant isolation routing policies and mTLS data encryption,2,4,8,Head of Privacy
+R-02,Unpatched Critical Remote Code Execution (RCE) on Vendor API Gateway,4,4,16,DORA Art. 11 / Qualys VMDR SLA,Mandated continuous external scanning via Qualys VMDR with contractually backed 14-day SLA,2,3,6,Director of InfoSec
+R-03,Systemic Concentration Outage of Core Payment Microservices,3,5,15,DORA Art. 30 Supply Chain,Development of an automated multi-cloud cold-standby exit strategy configuration,1,5,5,VP Infrastructure
+R-04,Unauthorized Privileged Access Escalation on Cloud Management Console,3,4,12,CCSK IAM-02 / ISO 27701,Zero Trust Network Access enforcement with hardware-backed MFA tokens and JIT logging,1,4,4,Head of IAM
+R-05,Data Destruction via Ransomware Infiltration of Vendor Cold Backups,2,5,10,DORA Art. 12 Resilience,Enforced write-once-read-many (WORM) immutable air-gapped architecture baselines,1,4,4,Director of InfoSec

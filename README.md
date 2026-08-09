@@ -15,4 +15,54 @@ To maintain its operational resilience and protect data privacy, ApexVault utili
 ### 🏛️ Architecture & Network Boundaries
 The diagram below illustrates the strict logical and physical isolation network boundaries maintained between ApexVault's production Virtual Private Cloud (VPC) and Third-Party Infrastructure (SaaS/IaaS/PaaS providers).
 
-+---------------------------------------------------------------------------------+|                          APEXVAULT DIGITAL LTD. (VPC)                           ||                                                                                 ||   +--------------------------+                  +---------------------------+   ||   |   Presentation Layer     |                  |   Application Layer       |   ||   |  [WAF / Cloudfront CDN]  |                  | [Microservices / EKS Cluster] | ||   +------------+-------------+                  +-------------+-------------+   ||                |                                              |                 ||                v                                              v                 ||   +--------------------------+                  +---------------------------+   ||   |    Data Privacy Layer    |                  |  Qualys VMDR Scanner Pod  |   ||   | [AES-256 Tokenization Engine]|              |  [Continuous Exposure Monitor]| ||   +------------+-------------+                  +-------------+-------------+   |+----------------|----------------------------------------------|-----------------+|                                              |====================|============ TRUST BOUNDARY ==================|=================| (TLS 1.3 / mTLS Enforced)                    | (API Integration)v                                              v+---------------------------------------------------------------------------------+|                       CRITICAL THIRD-PARTY PROVIDER ZONE                        ||                                                                                 ||   +--------------------------+                  +---------------------------+   ||   |   Vendor SaaS Platform   |                  | Vendor External Endpoints |   ||   | [Data Processing / Core] |                  | [Exposed API Gateways]    |   ||   +--------------------------+                  +---------------------------+   |+---------------------------------------------------------------------------------+
+```mermaid
+graph TD
+%% Define styles
+classDef vpcZone fill:#f4f7f6,stroke:#2e6f40,stroke-width:2px;
+classDef tpZone fill:#fff5f5,stroke:#c53030,stroke-width:2px;
+classDef layer fill:#ffffff,stroke:#4a5568,stroke-width:1px;
+
+%% Main VPC Container
+subgraph VPC [APEXVAULT DIGITAL LTD. VPC]
+direction TB
+
+subgraph PresApp [Presentation & Application Layer]
+WAF[WAF / Cloudfront CDN]
+Micro[Microservices / EKS Cluster]
+WAF --> Micro
+end
+
+subgraph Privacy [Data Privacy Layer]
+Scanner[Qualys VMDR Scanner Pod]
+Token[AES-256 Tokenization Engine]
+Monitor[Continuous Exposure Monitor]
+end
+
+PresApp --> |Internal Traffic| Privacy
+end
+
+%% Third Party Container
+subgraph TP [CRITICAL THIRD-PARTY PROVIDER ZONE]
+direction TB
+subgraph Vendor [Vendor SaaS Platform]
+Endpoints[Vendor External Endpoints]
+Core[Data Processing / Core]
+GW[Exposed API Gateways]
+
+Endpoints --> Core
+Core --> GW
+end
+end
+
+%% Trust Boundary Connection
+Privacy ====> |"TRUST BOUNDARY <br> (TLS 1.3 / mTLS Enforced) <br> (API Integration)"| TP
+
+%% Apply Classes
+class VPC vpcZone;
+class TP tpZone;
+class PresApp,Privacy,Vendor layer;
+```
+
+
+text 
+
